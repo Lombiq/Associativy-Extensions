@@ -1,0 +1,18 @@
+﻿Name: Associativy Extensions
+AntiForgery: enabled
+Author: Piedone
+Website: http://associativy.com
+Version: 1.1
+OrchardVersion: 1.6
+Description: Bundle of various extensions to the Associativy knowledge graph platform
+Features:
+	Associativy.Extensions:
+		Name: Associativy Extensions
+        Description: Bundle of various extensions to the Associativy knowledge graph platform
+		Category: Associativy
+		Dependencies: Associativy
+	Associativy.Extensions.Projector:
+		Name: Associativy Projector Extensions
+        Description: Extensions for Associativy hooking into the services of Projector
+		Category: Associativy
+		Dependencies: Associativy.Extensions, Orchard.Projections
