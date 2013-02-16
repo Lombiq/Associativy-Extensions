@@ -16,3 +16,8 @@ Features:
         Description: Extensions for Associativy hooking into the services of Projector
 		Category: Associativy
 		Dependencies: Associativy.Extensions, Orchard.Projections
+	Associativy.Extensions.Tokens:
+		Name: Associativy Tokens Extensions
+        Description: Extensions for Associativy hooking into the services of Tokens
+		Category: Associativy
+		Dependencies: Associativy.Extensions, Orchard.Tokens
