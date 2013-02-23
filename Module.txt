@@ -11,11 +11,11 @@ Features:
         Description: Bundle of various extensions to the Associativy knowledge graph platform
 		Category: Associativy
 		Dependencies: Associativy
-	Associativy.Extensions.Projector:
+	Associativy.Extensions.Projections:
 		Name: Associativy Projector Extensions
         Description: Extensions for Associativy hooking into the services of Projector
 		Category: Associativy
-		Dependencies: Associativy.Extensions, Orchard.Projections
+		Dependencies: Associativy.Extensions, Associativy.Frontends, Orchard.Projections
 	Associativy.Extensions.Tokens:
 		Name: Associativy Tokens Extensions
         Description: Extensions for Associativy hooking into the services of Tokens

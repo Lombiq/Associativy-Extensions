@@ -46,6 +46,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Associativy\Libs\QuickGraph\QuickGraph.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations">
@@ -80,6 +84,10 @@
       <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Associativy.Frontends\Associativy.Frontends.csproj">
+      <Project>{78ace1ae-f7ae-4342-a83f-8fab64514f52}</Project>
+      <Name>Associativy.Frontends</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Associativy\Associativy.csproj">
       <Project>{a8ee4964-4880-4ee1-ac0a-75492d89bbe8}</Project>
       <Name>Associativy</Name>
@@ -97,10 +105,16 @@
       <Name>Orchard.Tokens</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Compile Include="Projections\ConnectionsFilter.cs" />
+    <Compile Include="Projections\SearchFilter.cs" />
     <Compile Include="Tokens\NodeLabelTokens.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProjectorFilterSearchForm.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,0 +1,5 @@
+﻿<Placement>
+  <Match Path="Projector/Filter/Edit*">
+    <Place Pages_AssociativyFrontendSearchForm="Shape=ProjectorFilterSearchForm;Content:1"/>
+  </Match>
+</Placement>
