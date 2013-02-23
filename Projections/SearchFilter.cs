@@ -47,22 +47,22 @@ namespace Associativy.Extensions.Projections
 
         public void ApplyFilter(FilterContext context)
         {
-            if (context.State.Labels == null || context.State.GraphName == null) return;
+            if (string.IsNullOrEmpty(context.State.Labels) || context.State.GraphName == null) return;
 
             var graphContext = new GraphContext { GraphName = context.State.GraphName };
             var graph = _associativyServices.GraphManager.FindGraph(graphContext);
             if (graph == null) return;
 
             string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
-            var nodes = _associativyServices.NodeManager.GetManyByLabelQuery(graphContext, (IEnumerable<string>)context.State.Labels).List();
+            var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
+            var nodes = _associativyServices.NodeManager.GetManyByLabelQuery(graphContext, labelsArray).List();
             var associations = _associativyServices.Mind.MakeAssociations(graphContext, nodes);
             context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.Select(content => content.ContentItem.Id).ToArray()));
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
         {
-            if (context.State.Labels == null) context.State.Labels = Enumerable.Empty<string>();
-            return T("Content items matched by the search query \"{0}\" in the graph \"{1}\"", string.Join(", ", context.State.Labels), context.State.GraphName);
+            return T("Content items matched by the search query \"{0}\" in the graph \"{1}\"", context.State.Labels, context.State.GraphName);
         }
     }
 
@@ -70,16 +70,14 @@ namespace Associativy.Extensions.Projections
     public class SearchFilterForm : IFormProvider
     {
         private readonly dynamic _shapeFactory;
-        private readonly IContentManager _contentManager;
         private readonly IGraphManager _graphManager;
 
         public Localizer T { get; set; }
 
 
-        public SearchFilterForm(IShapeFactory shapeFactory, IContentManager contentManager, IGraphManager graphManager)
+        public SearchFilterForm(IShapeFactory shapeFactory, IGraphManager graphManager)
         {
             _shapeFactory = shapeFactory;
-            _contentManager = contentManager;
             _graphManager = graphManager;
 
             T = NullLocalizer.Instance;
@@ -91,10 +89,6 @@ namespace Associativy.Extensions.Projections
             Func<IShapeFactory, object> form =
                 shape =>
                 {
-                    var page = _contentManager.New("AssociativyProjectorSearchFilter");
-                    page.Weld(new AssociativyFrontendSearchFormPart());
-                    
-
                     var f = _shapeFactory.Form(
                         Id: "AssociativySearchFilterForm",
                         _GraphName: _shapeFactory.SelectList(
@@ -104,7 +98,12 @@ namespace Associativy.Extensions.Projections
                             Size: 10,
                             Multiple: false
                             ),
-                        _SearchForm: _contentManager.BuildDisplay(page)
+                        _Labels: _shapeFactory.Textbox(
+                            Id: "associativy-search-filter-labels", Name: "Labels",
+                            Title: T("Search terms"),
+                            Description: T("Enter labels of Associativy terms here."),
+                            Classes: new[] { "text textMedium" }),
+                        _SearchForm: _shapeFactory.ProjectorFilterSearchFormDynamics()
                         );
 
                     foreach (var graph in _graphManager.FindGraphs(GraphContext.Empty))

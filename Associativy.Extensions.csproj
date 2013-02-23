@@ -111,10 +111,7 @@
     <Compile Include="Tokens\NodeLabelTokens.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\ProjectorFilterSearchForm.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Placement.info" />
+    <Content Include="Views\ProjectorFilterSearchFormDynamics.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

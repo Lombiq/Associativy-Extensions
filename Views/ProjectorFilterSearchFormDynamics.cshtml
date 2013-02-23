@@ -1,0 +1,25 @@
+﻿@using Orchard.ContentManagement
+
+@{
+    Script.Require("AssociativyFrontends_AutoComplete").AtFoot();
+    Style.Require("jQueryUI_Orchard");
+}
+
+@using (Script.Foot())
+{
+    <script type="text/javascript">
+        (function ($) {
+            $(function () {
+                var $graphName = $("#GraphName");
+
+                $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + $graphName.find(":selected").val());
+
+                $graphName.click(function () {
+                    $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + $(this).find(':selected').val());
+                });
+            });
+        })(jQuery);
+    </script>
+}
+
+@Display.TokenHint()
