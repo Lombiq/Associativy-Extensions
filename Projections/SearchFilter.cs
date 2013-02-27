@@ -56,7 +56,7 @@ namespace Associativy.Extensions.Projections
             string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
             var nodes = _associativyServices.NodeManager.GetManyByLabelQuery(graphContext, labelsArray).List();
-            var associations = _associativyServices.Mind.MakeAssociations(graphContext, nodes);
+            var associations = _associativyServices.Mind.MakeAssociationsContent(graphContext, nodes);
             context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.Select(content => content.ContentItem.Id).ToArray()));
         }
 
