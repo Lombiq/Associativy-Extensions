@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Associativy.Frontends.Models.Pages.Frontends;
 using Associativy.GraphDiscovery;
+using Associativy.Models.Mind;
 using Associativy.Services;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -56,7 +57,7 @@ namespace Associativy.Extensions.Projections
             string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
             var nodes = _associativyServices.NodeManager.GetManyByLabelQuery(graphContext, labelsArray).List();
-            var associations = _associativyServices.Mind.MakeAssociationsContent(_associativyServices.GraphEditor, graphContext, nodes);
+            var associations = _associativyServices.Mind.MakeAssociationsContent(_associativyServices.GraphEditor, graphContext, nodes, MindSettings.Default);
             context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.Select(content => content.ContentItem.Id).ToArray()));
         }
 
