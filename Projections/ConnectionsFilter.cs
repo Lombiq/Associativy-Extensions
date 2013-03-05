@@ -46,12 +46,12 @@ namespace Associativy.Extensions.Projections
         {
             if (context.State.ItemId == null || context.State.GraphName == null) return;
 
-            var graphContext = new GraphContext { GraphName = context.State.GraphName };
+            var graphContext = new GraphContext { Name = context.State.GraphName };
             var graph = _graphManager.FindGraph(graphContext);
             if (graph == null) return;
 
             int itemId = int.Parse(_tokenizer.Replace(context.State.ItemId, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }));
-            var neighbourIds = graph.PathServices.ConnectionManager.GetNeighbourIds(graphContext, itemId).ToArray();
+            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(itemId).ToArray();
             context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", neighbourIds));
         }
 
@@ -102,7 +102,7 @@ namespace Associativy.Extensions.Projections
 
                     foreach (var graph in _graphManager.FindGraphs(GraphContext.Empty))
                     {
-                        f._GraphName.Add(new SelectListItem { Value = graph.GraphName, Text = graph.DisplayGraphName.Text });
+                        f._GraphName.Add(new SelectListItem { Value = graph.Name, Text = graph.DisplayName.Text });
                     }
 
 

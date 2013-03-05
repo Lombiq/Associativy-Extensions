@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Associativy.Frontends.Models.Pages.Frontends;
 using Associativy.GraphDiscovery;
-using Associativy.Models.Mind;
+using Associativy.Models.Services;
 using Associativy.Services;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
@@ -50,14 +50,14 @@ namespace Associativy.Extensions.Projections
         {
             if (string.IsNullOrEmpty(context.State.Labels) || context.State.GraphName == null) return;
 
-            var graphContext = new GraphContext { GraphName = context.State.GraphName };
+            var graphContext = new GraphContext { Name = context.State.GraphName };
             var graph = _associativyServices.GraphManager.FindGraph(graphContext);
             if (graph == null) return;
 
             string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
-            var nodes = _associativyServices.NodeManager.GetManyByLabelQuery(graphContext, labelsArray).List();
-            var associations = _associativyServices.Mind.MakeAssociationsContent(_associativyServices.GraphEditor, graphContext, nodes, MindSettings.Default);
+            var nodes = graph.Services.NodeManager.GetManyByLabelQuery(labelsArray).List();
+            var associations = graph.Services.NodeManager.MakeContentGraph(graph.Services.Mind.GetAllAssociations(MindSettings.Default));
             context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.Select(content => content.ContentItem.Id).ToArray()));
         }
 
@@ -109,7 +109,7 @@ namespace Associativy.Extensions.Projections
 
                     foreach (var graph in _graphManager.FindGraphs(GraphContext.Empty))
                     {
-                        f._GraphName.Add(new SelectListItem { Value = graph.GraphName, Text = graph.DisplayGraphName.Text });
+                        f._GraphName.Add(new SelectListItem { Value = graph.Name, Text = graph.DisplayName.Text });
                     }
 
 
