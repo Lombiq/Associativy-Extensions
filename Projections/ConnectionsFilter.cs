@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Associativy.Services;
 
 namespace Associativy.Extensions.Projections
 {
@@ -51,7 +52,7 @@ namespace Associativy.Extensions.Projections
             if (graph == null) return;
 
             int itemId = int.Parse(_tokenizer.Replace(context.State.ItemId, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }));
-            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(itemId, 0, int.MaxValue).ToArray();
+            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(itemId).ToArray();
             context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", neighbourIds));
         }
 
