@@ -57,8 +57,8 @@ namespace Associativy.Extensions.Projections
             string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
             var nodes = graph.Services.NodeManager.GetManyByLabelQuery(labelsArray).List();
-            var associations = graph.Services.NodeManager.MakeContentGraph(graph.Services.Mind.GetAllAssociations(MindSettings.Default));
-            context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.Select(content => content.ContentItem.Id).ToArray()));
+            var associations = graph.Services.Mind.MakeAssociations(nodes, MindSettings.Default).ToGraph();
+            context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.ToArray()));
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
