@@ -1,4 +1,8 @@
-﻿using Associativy.GraphDiscovery;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
+using Associativy.GraphDiscovery;
+using Associativy.Services;
 using Orchard.Core.Common.Models;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
@@ -6,12 +10,6 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Associativy.Services;
 
 namespace Associativy.Extensions.Projections
 {
