@@ -49,9 +49,9 @@ namespace Associativy.Extensions.Projections
             var graph = _graphManager.FindGraph(graphContext);
             if (graph == null) return;
 
-            int itemId = int.Parse(_tokenizer.Replace(context.State.ItemId, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }));
+            int itemId = int.Parse(_tokenizer.Replace((string)context.State.ItemId, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }));
             var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(itemId).ToArray();
-            context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", neighbourIds));
+            context.Query.Where(a => a.ContentItem(), p => p.In("Id", neighbourIds));
         }
 
         public LocalizedString DisplayFilter(FilterContext context)

@@ -45,17 +45,17 @@ namespace Associativy.Extensions.Projections
 
         public void ApplyFilter(FilterContext context)
         {
-            if (string.IsNullOrEmpty(context.State.Labels) || context.State.GraphName == null) return;
+            if (string.IsNullOrEmpty((string)context.State.Labels) || context.State.GraphName == null) return;
 
             var graphContext = new GraphContext { Name = context.State.GraphName };
             var graph = _associativyServices.GraphManager.FindGraph(graphContext);
             if (graph == null) return;
 
-            string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
+            string labels = _tokenizer.Replace((string)context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
             var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
             var nodes = graph.Services.NodeManager.GetByLabelQuery(labelsArray).List();
             var associations = graph.Services.Mind.MakeAssociations(nodes, MindSettings.Default).ToGraph();
-            context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.ToArray()));
+            context.Query.Where(a => a.ContentItem(), p => p.In("Id", associations.Vertices.ToArray()));
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
