@@ -12,7 +12,10 @@
             $(function () {
                 var $graphName = $("#GraphName");
 
-                $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + $graphName.find(":selected").val());
+                var selected = $graphName.find(":selected");
+                if (selected.length > 0) {
+                    $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + selected.val());
+                }
 
                 $graphName.click(function () {
                     $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + $(this).find(':selected').val());
