@@ -55,7 +55,16 @@ namespace Associativy.Extensions.Projections
             var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
             var nodes = graph.Services.NodeManager.GetByLabelQuery(labelsArray).List();
             var associations = graph.Services.Mind.MakeAssociations(nodes, MindSettings.Default).ToGraph();
-            context.Query.Where(a => a.ContentItem(), p => p.In("Id", associations.Vertices.ToArray()));
+            var vertices = associations.Vertices.ToList();
+            if (context.State._IncludeSearched == null)
+            {
+                foreach (var nodeId in nodes.Select(item => item.Id))
+                {
+                    vertices.Remove(nodeId);
+                }
+            }
+
+            context.Query.Where(a => a.ContentItem(), p => p.In("Id", vertices));
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
@@ -101,6 +110,10 @@ namespace Associativy.Extensions.Projections
                             Title: T("Search terms"),
                             Description: T("Enter labels of Associativy terms here."),
                             Classes: new[] { "text textMedium" }),
+                        _IncludeSearched: _shapeFactory.Checkbox(
+                            Id: "associativy-search-filter-include-searched", Name: "IncludeSearched",
+                            Title: T("Include searched nodes"),
+                            Description: T("If checked, the nodes searched will be included in the result themselves too.")),
                         _SearchForm: _shapeFactory.ProjectorFilterSearchFormDynamics()
                         );
 
