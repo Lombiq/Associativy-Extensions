@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Associativy.GraphDiscovery;
 using Associativy.Services;
-using Orchard.Core.Common.Models;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
