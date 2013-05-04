@@ -17,15 +17,13 @@ namespace Associativy.Extensions.Projections
     [OrchardFeature("Associativy.Extensions.Projections")]
     public class SearchFilter : Orchard.Projections.Services.IFilterProvider
     {
-        private readonly ITokenizer _tokenizer;
         private readonly IAssociativyServices _associativyServices;
 
         public Localizer T { get; set; }
 
 
-        public SearchFilter(ITokenizer tokenizer, IAssociativyServices associativyServices)
+        public SearchFilter(IAssociativyServices associativyServices)
         {
-            _tokenizer = tokenizer;
             _associativyServices = associativyServices;
 
             T = NullLocalizer.Instance;
@@ -50,18 +48,27 @@ namespace Associativy.Extensions.Projections
             var graph = _associativyServices.GraphManager.FindGraph(graphContext);
             if (graph == null) return;
 
-            string labels = _tokenizer.Replace((string)context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
-            var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
+            var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray((string)context.State.Labels);
             var nodes = graph.Services.NodeManager.GetByLabelQuery(labelsArray).List();
+
+            if (!nodes.Any())
+            {
+                // No result
+                context.Query.Where(a => a.ContentItem(), p => p.In("Id", new[] { -1 }));
+                return;
+            }
+
             var associations = graph.Services.Mind.MakeAssociations(nodes, MindSettings.Default).ToGraph();
             var vertices = associations.Vertices.ToList();
-            if (context.State._IncludeSearched == null)
+            if (context.State.IncludeSearched == null)
             {
                 foreach (var nodeId in nodes.Select(item => item.Id))
                 {
                     vertices.Remove(nodeId);
                 }
             }
+
+            if (vertices.Count == 0) vertices.Add(-1); // No result if no associations are found
 
             context.Query.Where(a => a.ContentItem(), p => p.In("Id", vertices));
         }

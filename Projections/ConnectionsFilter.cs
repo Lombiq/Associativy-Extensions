@@ -15,15 +15,13 @@ namespace Associativy.Extensions.Projections
     [OrchardFeature("Associativy.Extensions.Projections")]
     public class ConnectionsFilter : Orchard.Projections.Services.IFilterProvider
     {
-        private readonly ITokenizer _tokenizer;
         private readonly IGraphManager _graphManager;
 
         public Localizer T { get; set; }
 
 
-        public ConnectionsFilter(ITokenizer tokenizer, IGraphManager graphManager)
+        public ConnectionsFilter(IGraphManager graphManager)
         {
-            _tokenizer = tokenizer;
             _graphManager = graphManager;
 
             T = NullLocalizer.Instance;
@@ -42,14 +40,16 @@ namespace Associativy.Extensions.Projections
 
         public void ApplyFilter(FilterContext context)
         {
-            if (context.State.ItemId == null || context.State.GraphName == null) return;
+            if (string.IsNullOrEmpty((string)context.State.ItemId) || context.State.GraphName == null) return;
 
             var graphContext = new GraphContext { Name = context.State.GraphName };
             var graph = _graphManager.FindGraph(graphContext);
             if (graph == null) return;
 
-            int itemId = int.Parse(_tokenizer.Replace((string)context.State.ItemId, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }));
-            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(itemId).ToArray();
+            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(int.Parse((string)context.State.ItemId)).ToArray();
+
+            if (neighbourIds.Length == 0) neighbourIds = new[] { -1 }; // No result if no neighbours are found
+
             context.Query.Where(a => a.ContentItem(), p => p.In("Id", neighbourIds));
         }
 
