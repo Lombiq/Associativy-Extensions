@@ -115,7 +115,7 @@ namespace Associativy.Extensions.Projections
                             Id: "associativy-search-filter-labels", Name: "Labels",
                             Title: T("Search terms"),
                             Description: T("Enter labels of Associativy terms here."),
-                            Classes: new[] { "text textMedium" }),
+                            Classes: new[] { "text textMedium tokenized" }),
                         _IncludeSearched: _shapeFactory.Checkbox(
                             Id: "associativy-search-filter-include-searched", Name: "IncludeSearched",
                             Title: T("Include searched nodes"),
