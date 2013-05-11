@@ -13,14 +13,14 @@ using Orchard.Tokens;
 namespace Associativy.Extensions.Projections
 {
     [OrchardFeature("Associativy.Extensions.Projections")]
-    public class ConnectionsFilter : Orchard.Projections.Services.IFilterProvider
+    public class NeighboursFilter : Orchard.Projections.Services.IFilterProvider
     {
         private readonly IGraphManager _graphManager;
 
         public Localizer T { get; set; }
 
 
-        public ConnectionsFilter(IGraphManager graphManager)
+        public NeighboursFilter(IGraphManager graphManager)
         {
             _graphManager = graphManager;
 
@@ -31,10 +31,10 @@ namespace Associativy.Extensions.Projections
         public void Describe(DescribeFilterContext describe)
         {
             describe.For("Associativy", T("Associativy"), T("Associativy filters"))
-                .Element("AssociativyConnectionsFilter", T("Connections filter"), T("Filters for items connected to an item."),
+                .Element("AssociativyNeighboursFilter", T("Neighbours filter"), T("Filters for items connected to an item."),
                     ApplyFilter,
                     DisplayFilter,
-                    "AssociativyConnectionsFilter"
+                    "AssociativyNeighboursFilter"
                 );
         }
 
@@ -60,7 +60,7 @@ namespace Associativy.Extensions.Projections
     }
 
     [OrchardFeature("Associativy.Extensions.Projections")]
-    public class ConnectionsFilterForm : IFormProvider
+    public class NeighboursFilterForm : IFormProvider
     {
         private readonly dynamic _shapeFactory;
         private readonly IGraphManager _graphManager;
@@ -68,7 +68,7 @@ namespace Associativy.Extensions.Projections
         public Localizer T { get; set; }
 
 
-        public ConnectionsFilterForm(IShapeFactory shapeFactory, IGraphManager graphManager)
+        public NeighboursFilterForm(IShapeFactory shapeFactory, IGraphManager graphManager)
         {
             _shapeFactory = shapeFactory;
             _graphManager = graphManager;
@@ -83,7 +83,7 @@ namespace Associativy.Extensions.Projections
                 shape =>
                 {
                     var f = _shapeFactory.Form(
-                        Id: "AssociativyConnectionsFilterForm",
+                        Id: "AssociativyNeighboursFilterForm",
                         _ItemId: _shapeFactory.Textbox(
                             Id: "ItemId", Name: "ItemId",
                             Title: T("Item Id"),
@@ -92,7 +92,7 @@ namespace Associativy.Extensions.Projections
                         _GraphName: _shapeFactory.SelectList(
                             Id: "GraphName", Name: "GraphName",
                             Title: T("Graph"),
-                            Description: T("Select a graph to fetch the connections from."),
+                            Description: T("Select a graph to fetch the neighbours from."),
                             Size: 10,
                             Multiple: false
                             )
@@ -107,7 +107,7 @@ namespace Associativy.Extensions.Projections
                     return f;
                 };
 
-            context.Form("AssociativyConnectionsFilter", form);
+            context.Form("AssociativyNeighboursFilter", form);
         }
     }
 }

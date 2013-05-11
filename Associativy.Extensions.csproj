@@ -106,7 +106,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Projections\ConnectionsFilter.cs" />
+    <Compile Include="Projections\NeighboursFilter.cs" />
     <Compile Include="Projections\SearchFilter.cs" />
     <Compile Include="Tokens\NodeLabelTokens.cs" />
   </ItemGroup>
