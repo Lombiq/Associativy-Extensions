@@ -14,11 +14,11 @@
 
                 var selected = $graphName.find(":selected");
                 if (selected.length > 0) {
-                    $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + selected.val());
+                    $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.Action("FetchSimilarLabels", "AutoComplete", new { Area = "Associativy.Frontends" })?graphName=" + selected.val());
                 }
 
                 $graphName.click(function () {
-                    $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.RouteUrl("Associativy.Frontends.AutoComplete.FetchSimilarLabels")?graphName=" + $(this).find(':selected').val());
+                    $.associativy.autoComplete.labels("#associativy-search-filter-labels", "@Url.Action("FetchSimilarLabels", "AutoComplete", new { Area = "Associativy.Frontends" })?graphName=" + $(this).find(':selected').val());
                 });
             });
         })(jQuery);
