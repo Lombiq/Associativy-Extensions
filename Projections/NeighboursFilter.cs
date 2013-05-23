@@ -88,7 +88,7 @@ namespace Associativy.Extensions.Projections
                             Id: "ItemId", Name: "ItemId",
                             Title: T("Item Id"),
                             Description: T("The numerical id of the content item whose connected items should be fetched."),
-                            Classes: new[] { "tokenized" }),
+                            Classes: new[] { "tokenized textMedium" }),
                         _GraphName: _shapeFactory.SelectList(
                             Id: "GraphName", Name: "GraphName",
                             Title: T("Graph"),
