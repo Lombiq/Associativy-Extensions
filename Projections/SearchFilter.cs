@@ -11,6 +11,7 @@ using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Tokens;
+using Piedone.HelpfulLibraries.Utilities;
 
 namespace Associativy.Extensions.Projections
 {
@@ -70,7 +71,7 @@ namespace Associativy.Extensions.Projections
 
             if (vertices.Count == 0) vertices.Add(-1); // No result if no associations are found
 
-            context.Query.Where(a => a.ContentItem(), p => p.In("Id", vertices));
+            context.Query.WhereIdIn(vertices);
         }
 
         public LocalizedString DisplayFilter(FilterContext context)

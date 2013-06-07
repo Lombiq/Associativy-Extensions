@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Associativy.GraphDiscovery;
 using Associativy.Services;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Tokens;
+using Piedone.HelpfulLibraries.Utilities;
 
 namespace Associativy.Extensions.Projections
 {
@@ -50,7 +53,7 @@ namespace Associativy.Extensions.Projections
 
             if (neighbourIds.Length == 0) neighbourIds = new[] { -1 }; // No result if no neighbours are found
 
-            context.Query.Where(a => a.ContentItem(), p => p.In("Id", neighbourIds));
+            context.Query.WhereIdIn(neighbourIds);
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
