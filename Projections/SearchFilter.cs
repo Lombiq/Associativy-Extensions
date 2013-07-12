@@ -120,7 +120,8 @@ namespace Associativy.Extensions.Projections
                         _IncludeSearched: _shapeFactory.Checkbox(
                             Id: "associativy-search-filter-include-searched", Name: "IncludeSearched",
                             Title: T("Include searched nodes"),
-                            Description: T("If checked, the nodes searched will be included in the result themselves too.")),
+                            Description: T("If checked, the nodes searched will be included in the result themselves too."), 
+                            Value: "on"),
                         _SearchForm: _shapeFactory.ProjectorFilterSearchFormDynamics()
                         );
 
