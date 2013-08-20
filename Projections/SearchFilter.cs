@@ -5,28 +5,26 @@ using Associativy.Frontends.Models.Pages.Frontends;
 using Associativy.GraphDiscovery;
 using Associativy.Models.Services;
 using Associativy.Services;
-using Orchard.Core.Common.Models;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Tokens;
+using Piedone.HelpfulLibraries.Utilities;
 
 namespace Associativy.Extensions.Projections
 {
     [OrchardFeature("Associativy.Extensions.Projections")]
     public class SearchFilter : Orchard.Projections.Services.IFilterProvider
     {
-        private readonly ITokenizer _tokenizer;
         private readonly IAssociativyServices _associativyServices;
 
         public Localizer T { get; set; }
 
 
-        public SearchFilter(ITokenizer tokenizer, IAssociativyServices associativyServices)
+        public SearchFilter(IAssociativyServices associativyServices)
         {
-            _tokenizer = tokenizer;
             _associativyServices = associativyServices;
 
             T = NullLocalizer.Instance;
@@ -45,17 +43,35 @@ namespace Associativy.Extensions.Projections
 
         public void ApplyFilter(FilterContext context)
         {
-            if (string.IsNullOrEmpty(context.State.Labels) || context.State.GraphName == null) return;
+            if (string.IsNullOrEmpty((string)context.State.Labels) || context.State.GraphName == null) return;
 
             var graphContext = new GraphContext { Name = context.State.GraphName };
             var graph = _associativyServices.GraphManager.FindGraph(graphContext);
             if (graph == null) return;
 
-            string labels = _tokenizer.Replace(context.State.Labels, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode });
-            var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray(labels);
-            var nodes = graph.Services.NodeManager.GetManyByLabelQuery(labelsArray).List();
+            var labelsArray = AssociativyFrontendSearchFormPart.LabelsToArray((string)context.State.Labels);
+            var nodes = graph.Services.NodeManager.GetByLabelQuery(labelsArray).List();
+
+            if (!nodes.Any())
+            {
+                // No result
+                context.Query.Where(a => a.ContentItem(), p => p.In("Id", new[] { -1 }));
+                return;
+            }
+
             var associations = graph.Services.Mind.MakeAssociations(nodes, MindSettings.Default).ToGraph();
-            context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", associations.Vertices.ToArray()));
+            var vertices = associations.Vertices.ToList();
+            if (context.State.IncludeSearched == null)
+            {
+                foreach (var nodeId in nodes.Select(item => item.Id))
+                {
+                    vertices.Remove(nodeId);
+                }
+            }
+
+            if (vertices.Count == 0) vertices.Add(-1); // No result if no associations are found
+
+            context.Query.WhereIdIn(vertices);
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
@@ -100,7 +116,12 @@ namespace Associativy.Extensions.Projections
                             Id: "associativy-search-filter-labels", Name: "Labels",
                             Title: T("Search terms"),
                             Description: T("Enter labels of Associativy terms here."),
-                            Classes: new[] { "text textMedium" }),
+                            Classes: new[] { "text textMedium tokenized" }),
+                        _IncludeSearched: _shapeFactory.Checkbox(
+                            Id: "associativy-search-filter-include-searched", Name: "IncludeSearched",
+                            Title: T("Include searched nodes"),
+                            Description: T("If checked, the nodes searched will be included in the result themselves too."), 
+                            Value: "on"),
                         _SearchForm: _shapeFactory.ProjectorFilterSearchFormDynamics()
                         );
 

@@ -1,30 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Associativy.GraphDiscovery;
 using Associativy.Services;
-using Orchard.Core.Common.Models;
+using Orchard.ContentManagement;
 using Orchard.DisplayManagement;
 using Orchard.Environment.Extensions;
 using Orchard.Forms.Services;
 using Orchard.Localization;
 using Orchard.Projections.Descriptors.Filter;
 using Orchard.Tokens;
+using Piedone.HelpfulLibraries.Utilities;
 
 namespace Associativy.Extensions.Projections
 {
     [OrchardFeature("Associativy.Extensions.Projections")]
-    public class ConnectionsFilter : Orchard.Projections.Services.IFilterProvider
+    public class NeighboursFilter : Orchard.Projections.Services.IFilterProvider
     {
-        private readonly ITokenizer _tokenizer;
         private readonly IGraphManager _graphManager;
 
         public Localizer T { get; set; }
 
 
-        public ConnectionsFilter(ITokenizer tokenizer, IGraphManager graphManager)
+        public NeighboursFilter(IGraphManager graphManager)
         {
-            _tokenizer = tokenizer;
             _graphManager = graphManager;
 
             T = NullLocalizer.Instance;
@@ -34,24 +34,26 @@ namespace Associativy.Extensions.Projections
         public void Describe(DescribeFilterContext describe)
         {
             describe.For("Associativy", T("Associativy"), T("Associativy filters"))
-                .Element("AssociativyConnectionsFilter", T("Connections filter"), T("Filters for items connected to an item."),
+                .Element("AssociativyNeighboursFilter", T("Neighbours filter"), T("Filters for items connected to an item."),
                     ApplyFilter,
                     DisplayFilter,
-                    "AssociativyConnectionsFilter"
+                    "AssociativyNeighboursFilter"
                 );
         }
 
         public void ApplyFilter(FilterContext context)
         {
-            if (context.State.ItemId == null || context.State.GraphName == null) return;
+            if (string.IsNullOrEmpty((string)context.State.ItemId) || context.State.GraphName == null) return;
 
             var graphContext = new GraphContext { Name = context.State.GraphName };
             var graph = _graphManager.FindGraph(graphContext);
             if (graph == null) return;
 
-            int itemId = int.Parse(_tokenizer.Replace(context.State.ItemId, null, new ReplaceOptions { Encoding = ReplaceOptions.NoEncode }));
-            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(itemId).ToArray();
-            context.Query.Where(a => a.ContentPartRecord<CommonPartRecord>(), p => p.In("Id", neighbourIds));
+            var neighbourIds = graph.Services.ConnectionManager.GetNeighbourIds(int.Parse((string)context.State.ItemId)).ToArray();
+
+            if (neighbourIds.Length == 0) neighbourIds = new[] { -1 }; // No result if no neighbours are found
+
+            context.Query.WhereIdIn(neighbourIds);
         }
 
         public LocalizedString DisplayFilter(FilterContext context)
@@ -61,7 +63,7 @@ namespace Associativy.Extensions.Projections
     }
 
     [OrchardFeature("Associativy.Extensions.Projections")]
-    public class ConnectionsFilterForm : IFormProvider
+    public class NeighboursFilterForm : IFormProvider
     {
         private readonly dynamic _shapeFactory;
         private readonly IGraphManager _graphManager;
@@ -69,7 +71,7 @@ namespace Associativy.Extensions.Projections
         public Localizer T { get; set; }
 
 
-        public ConnectionsFilterForm(IShapeFactory shapeFactory, IGraphManager graphManager)
+        public NeighboursFilterForm(IShapeFactory shapeFactory, IGraphManager graphManager)
         {
             _shapeFactory = shapeFactory;
             _graphManager = graphManager;
@@ -84,16 +86,16 @@ namespace Associativy.Extensions.Projections
                 shape =>
                 {
                     var f = _shapeFactory.Form(
-                        Id: "AssociativyConnectionsFilterForm",
+                        Id: "AssociativyNeighboursFilterForm",
                         _ItemId: _shapeFactory.Textbox(
                             Id: "ItemId", Name: "ItemId",
                             Title: T("Item Id"),
                             Description: T("The numerical id of the content item whose connected items should be fetched."),
-                            Classes: new[] { "tokenized" }),
+                            Classes: new[] { "tokenized textMedium" }),
                         _GraphName: _shapeFactory.SelectList(
                             Id: "GraphName", Name: "GraphName",
                             Title: T("Graph"),
-                            Description: T("Select a graph to fetch the connections from."),
+                            Description: T("Select a graph to fetch the neighbours from."),
                             Size: 10,
                             Multiple: false
                             )
@@ -108,7 +110,7 @@ namespace Associativy.Extensions.Projections
                     return f;
                 };
 
-            context.Form("AssociativyConnectionsFilter", form);
+            context.Form("AssociativyNeighboursFilter", form);
         }
     }
 }
