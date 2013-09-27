@@ -58,7 +58,7 @@ namespace Associativy.Extensions.Projections
 
         public LocalizedString DisplayFilter(FilterContext context)
         {
-            return T("Content items connected to the item with id {0}", context.State.ItemId);
+            return T("Content items connected to the item with id {0} in the graph \"{1}\"", context.State.ItemId, context.State.GraphName);
         }
     }
 
