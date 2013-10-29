@@ -1,0 +1,25 @@
+﻿@using Associativy.Frontends.Extensions
+@using Orchard.ContentManagement;
+
+@{
+    Style.Include("associativy-extensions-content-parts");
+    
+    var part = (Associativy.Extensions.Models.AssociativyGraphLinksPart)Model.ContentPart;
+
+    // This is bad, somehow the engine used should be configurable
+    var engine = part.FrontendEngines.Where(e => e.EngineName == "Jit").SingleOrDefault();
+}
+
+@if (engine != null)
+{
+    <div class="associativy-extensions-graph-links">
+        <ul>
+            @foreach (var graph in part.Graphs)
+            {
+                <li>
+                    @Html.Link(T("View on {0}", graph.DisplayName).Text, @Url.RouteEngineUrl(engine, graph.Name, new RouteValueDictionary { { "Action", "Associations" }, { "Associativy.SearchForm.Labels", part.As<Associativy.Models.IAssociativyNodeLabelAspect>().Label } }))
+                </li>
+            }
+        </ul>
+    </div>
+}

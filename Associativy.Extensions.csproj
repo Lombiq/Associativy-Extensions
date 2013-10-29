@@ -110,12 +110,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drivers\AssociativyGraphLinksPartDriver.cs" />
+    <Compile Include="Handlers\AssociativyGraphLinksPartHandler.cs" />
+    <Compile Include="Migrations\ContentPartsMigrations.cs" />
+    <Compile Include="Models\AssociativyGraphLinksPart.cs" />
     <Compile Include="Projections\NeighboursFilter.cs" />
     <Compile Include="Projections\SearchFilter.cs" />
     <Compile Include="Tokens\NodeLabelTokens.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ProjectorFilterSearchFormDynamics.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Parts\AssociativyGraphLinks.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Placement.info">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\associativy-extensions-content-parts.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

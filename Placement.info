@@ -1,0 +1,5 @@
+﻿<Placement>
+  <Match DisplayType="Detail">
+    <Place Parts_AssociativyGraphLinks="Header:after.8"/>
+  </Match>
+</Placement>

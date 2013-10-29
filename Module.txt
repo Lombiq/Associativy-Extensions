@@ -21,3 +21,8 @@ Features:
         Description: Extensions for Associativy hooking into the services of Tokens
 		Category: Associativy
 		Dependencies: Associativy.Extensions, Orchard.Tokens
+	Associativy.Extensions.ContentParts:
+		Name: Associativy Content Parts Extensions
+        Description: Extensions for Associativy containing some content parts
+		Category: Associativy
+		Dependencies: Associativy.Extensions, Associativy.Frontends
