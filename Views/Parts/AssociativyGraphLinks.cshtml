@@ -6,8 +6,7 @@
     
     var part = (Associativy.Extensions.Models.AssociativyGraphLinksPart)Model.ContentPart;
 
-    // This is bad, somehow the engine used should be configurable
-    var engine = part.FrontendEngines.Where(e => e.EngineName == "Jit").SingleOrDefault();
+    var engine = part.FrontendEngines.Where(e => e.EngineName == part.Settings.GetModel<Associativy.Extensions.Settings.AssociativyGraphLinksTypePartSettings>().FrontendEngineName).SingleOrDefault();
 }
 
 @if (engine != null)

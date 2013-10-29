@@ -1,0 +1,18 @@
+﻿@model Associativy.Extensions.Settings.AssociativyGraphLinksTypePartSettings
+
+<fieldset>
+    <ol>
+        <li>
+            @Html.LabelFor(m => m.FrontendEngineName, T("Frontend engine"))
+            @Html.DropDownListFor(
+            m => m.FrontendEngineName, 
+            Model.AllFrontendEngines.Select(engine => new SelectListItem
+            {
+                Text = engine.DisplayEngineName.Text,
+                Value = engine.EngineName,
+                Selected = Model.FrontendEngineName == engine.EngineName
+            }))
+            <span class="hint">@T("The selected frontend engine (the ones available in the system are listed) will be used to display the graphs.")</span>
+        </li>
+    </ol>
+</fieldset>

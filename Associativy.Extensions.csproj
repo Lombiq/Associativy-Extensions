@@ -119,6 +119,7 @@
     <Compile Include="Models\AssociativyGraphLinksPart.cs" />
     <Compile Include="Projections\NeighboursFilter.cs" />
     <Compile Include="Projections\SearchFilter.cs" />
+    <Compile Include="Settings\AssociativyGraphLinksTypePartSettings.cs" />
     <Compile Include="Tokens\NodeLabelTokens.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Styles\associativy-extensions-content-parts.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\DefinitionTemplates\AssociativyGraphLinksTypePartSettings.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
