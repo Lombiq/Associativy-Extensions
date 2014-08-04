@@ -146,6 +146,11 @@
   <ItemGroup>
     <Content Include="Licence.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Styles\associativy-extensions-content-parts.css.map">
+      <DependentUpon>associativy-extensions-content-parts.css</DependentUpon>
+    </Content>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
