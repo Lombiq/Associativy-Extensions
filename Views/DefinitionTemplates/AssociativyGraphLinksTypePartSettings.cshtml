@@ -1,4 +1,4 @@
-﻿@model Associativy.Extensions.Settings.AssociativyGraphLinksTypePartSettings
+@model Associativy.Extensions.Settings.AssociativyGraphLinksTypePartSettings
 
 <fieldset>
     <ol>
@@ -12,7 +12,7 @@
                 Value = engine.EngineName,
                 Selected = Model.FrontendEngineName == engine.EngineName
             }))
-            <span class="hint">@T("The selected frontend engine (the ones available in the system are listed) will be used to display the graphs.")</span>
+            @Html.Hint(T("The selected frontend engine (the ones available in the system are listed) will be used to display the graphs."))
         </li>
     </ol>
 </fieldset>
