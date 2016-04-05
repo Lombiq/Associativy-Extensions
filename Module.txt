@@ -3,7 +3,7 @@ AntiForgery: enabled
 Author: Piedone
 Website: http://associativy.com
 Version: 1.1
-OrchardVersion: 1.9.3
+OrchardVersion: 1.10
 Description: Bundle of various extensions to the Associativy knowledge graph platform
 Features:
 	Associativy.Extensions:
